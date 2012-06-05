@@ -159,7 +159,7 @@
 					<h3 class="inverted">StackMob &amp; JavaScript</h3>
 					<p><span style="font-size: 24px;">(uses Backbone.js)</span></p>
 					<p style="margin-top: 100px;">
-						<p><a href="http://www.stackmob.com" target="_blank">stackmob.com</a> | <a href="http://www.twitter.com/stackmob">@stackmob</a></p>
+						<p><a href="http://www.stackmob.com" target="_blank">stackmob.com</a> | <a href="http://www.twitter.com/stackmob">@stackmob</a> | #stackmob</p>
 						<p>Erick Tai | <a href="http://www.twitter.com/ericktai" target="_blank">@ericktai</a></p>
 					</p>
 				</section>	
@@ -219,6 +219,7 @@
 						</ul>
 					</section>
 
+				
 					<section>
 						<h2>StackMob: Who are we?</h2>
 						
@@ -231,6 +232,8 @@
 						</ul>
 						
 					</section>
+
+	
 					<section>
 						<h2>StackMob: Who uses us?</h2>
 						
@@ -256,7 +259,6 @@
 						
 						<ul>
 							<li>Services via REST API: &rarr; URL via HTTP Request</li>
-							<li>Secure it: OAuth</li>
 							<li>Connect via AJAX</li>
 							<li>Extended Backbone.js Models</li>
 						</ul>
@@ -267,7 +269,8 @@
 						<p>Accessible from any platform</p>
 <pre><code class="brush: xml">
 http://api.mob1.stackmob.com/user
-                          ../user/login
+                          ../user/johndoe
+                          ../user?age[gte]=30&age[lte]=50
                           ../todo
                           ../yourcustommethod
 </code></pre>
@@ -297,41 +300,7 @@ http://static.stackmob.com/js/backbone-0.9.2-min.js
 http://static.stackmob.com/js/stackmob-js-0.2.1-min.js
 </code></pre>
 					</section>
-<!--										
-					<section>
-						<h2>Extended BackBone.js</h2>
-<pre><code class="brush: javascript">
-StackMob.Model = BackBone.Model.extend({
-	...
-	sync: function(method, model, options) { ... },
-	...
-});
 
-StackMob.Collection = BackBone.Collection.extend({
-	...
-}); 
-</code></pre>
-					</section>
-
-					<section>
-
-						<h2>Overrode sync method</h2>
-<pre><code class="brush: javascript;">
-StackMob.Model = BackBone.Model.extend({
-	...
-	sync: function(method, model, options) {
-		//Use AJAX to call StackMob's REST API
-		//Save/Fetch Data
-		//Authenticate users
-		//etc...
-	}
-	...
-});
-</code></pre>	
-					</section>
--->
-					
-					
 					
 					<section>
 						<h2>Initialize</h2>
@@ -354,6 +323,13 @@ StackMob.init({
 Syntax:
 
 <pre><code class="brush: javascript;">
+//Declare once per page
+var Todo = StackMob.Model.extend({ 
+	schemaName: 'todo' 
+});
+
+...
+
 var td = new Todo({
 	action: 'Prepare for SFJS',
 	priority: 'high'
@@ -363,6 +339,29 @@ td.create(); //AJAX call to StackMob REST API
 </code></pre>
 
 						</section>
+
+						<section>
+						<h2>Save to "todo" table</h2>
+
+Syntax:
+
+<pre><code class="brush: javascript; highlight: [3,13]">
+//Declare once per page
+var Todo = StackMob.Model.extend({ 
+	schemaName: 'todo' 
+});
+
+...
+
+var td = new Todo({
+	action: 'Prepare for SFJS',
+	priority: 'high'
+});
+
+td.create();
+</code></pre>
+
+						</section>						
 
 						<section>
 							<h2>Let's Try It!</h2>
@@ -410,35 +409,25 @@ td.create(); //AJAX call to StackMob REST API
 							<p><a href="https://www.stackmob.com/platform/api/schemas/" target="_blank"><img width="500px" src="https://s3.amazonaws.com/static.stackmob.com/images/screenshots/overview/StackMob_Manage_Schemas.png" alt="StackMob: Object Browser"/></a></p>
 						</section>
 
-						<section>
-						<h2>Save to "todo" table</h2>
 
-Syntax:
+<section>
+	<h2>Aw yeah! Backend Created!</h2>
+	
+	<p>
+		<img src="http://dl.dropbox.com/u/9289507/joy.gif" alt=""/>
+	</p>
+	
+</section>
 
-<pre><code class="brush: javascript; highlight: [3,13]">
-//Declare once per page
-var Todo = StackMob.Model.extend({ 
-	schemaName: 'todo' 
-});
 
-...
 
-var td = new Todo({
-	action: 'Prepare for SFJS',
-	priority: 'high'
-});
-
-td.create();
-</code></pre>
-
-						</section>
 
 
 
 						<section>
 <h2>Asynchronous: Callbacks</h2>
 
-<pre><code class="brush: javascript;">
+<pre><code class="brush: javascript; highlight: [2,5]">
 td.create({
 	success: function(model) { 
 		console.debug(model.toJSON()); 
@@ -568,9 +557,14 @@ todo.destroy(callbacks);
 				</section>
 				
 				<section>
+					<h2>WOOHOO for CRUD!</h2>
+					<img src="http://dl.dropbox.com/u/77348001/pileofcrud.jpg" alt=""/>
+				</section>
+				
+				<section>
 					<section>
 						<h2>Collections</h2>
-						<pre><code class="brush: javascript">
+						<pre><code class="brush: javascript; highlight: [9,10,13]">
 						//From earlier..
 						var Todo = StackMob.Model.extend({
 							schemaName: 'todo'
@@ -613,7 +607,7 @@ todo.destroy(callbacks);
 						<h2>Queries: Fetching specific models</h2>
 						
 						<p>Getting Finished Todos</p>
-	<pre><code class="brush: javascript;">
+	<pre><code class="brush: javascript; highlight: [1, 5]">
 	var q = new StackMob.Collection.Query();
 	q.equals('done', true);
 	
@@ -660,28 +654,57 @@ people.query(q, callbacks);
 </code></pre>
 					</section>
 					<section>
-						<h2>And more...</h2>
+						<h2>Ordering/Pagination</h2>
 					
 <pre><code class="brush: javascript;">
 var q = new StackMob.Collection.Query();
 q.orderAsc('age'); //order by ascending
 q.setRange(0,4); //pagination first 5 results
 
-//select certain fields
-q.select('username').select('age').select('followers');  
-
 var people = new People(); //StackMob.Collection
 people.query(q, callbacks);
 	
 </code></pre>						
 					</section>
+					<section>
+						<h2>Select Fields (Smaller Payload)</h2>
+<pre><code class="brush: javascript;">
+var q = new StackMob.Collection.Query();
+//select certain fields
+q.select('username').select('age');
+
+var people = new People(); //StackMob.Collection
+people.query(q, callbacks);
+	
+</code></pre>												
+  
+					</section>
+					
+					<section>
+						<h2>Select Fields Example</h2>
+<pre><code class="brush: javascript;">
+//q.select('username').select('age');
+
+[{
+	username: 'bob',
+	age: 10
+}, {
+	username: 'jane',
+	age: 15
+}, {
+	username: 'matt',
+	age: 20
+}]
+	
+</code></pre>						
+					</section>
+					
 				</section>
 				
 				<section>
 					<section>
 						<h2>Relationships</h2>
-						<p>Related Objects</p>
-						<p>User has many Todos</p>
+						<img src="http://dl.dropbox.com/u/77348001/userTotodos.png" alt=""/>
 					</section>			
 					
 					<section>
@@ -690,10 +713,12 @@ people.query(q, callbacks);
 							<li><a href="https://www.stackmob.com/platform/api/schemas/edit/user" target="blank">Edit User Schema</a></li>
 							<li>Add one-to-many "todos" relationship</li>
 						</ul>
+						<img src="http://dl.dropbox.com/u/77348001/to-do-list-nothing.jpg" alt=""/>
 					</section>
 					
 					<section>
 						<h2>Give Todo Items to User</h2>
+						<img src="http://dl.dropbox.com/u/77348001/calvin_and_hobbes_calvin.png" alt=""/>
 <pre><code class="brush: javascript;">
 var todo1 = new Todo({ action: 'take out the trash' });	
 var todo2 = new Todo({ action: 'do the laundry' });
@@ -761,6 +786,11 @@ user.fetchExpanded(1, callbacks);
 				<section>
 					<section>
 						<h2>User Authentication</h2>
+						
+						<img src="http://dl.dropbox.com/u/77348001/calving_hobbes_password.gif" alt=""/>
+					</section>
+					<section>
+						<h2>Create User & Login</h2>
 <pre><code class="brush: javascript;">
 //User created via user.create()	
 	
@@ -769,6 +799,10 @@ var user = new StackMob.User({
 	password: 'myfists'
 });
 
+user.create(); //
+
+...
+
 user.login(callbacks);
 
 ...
@@ -776,6 +810,7 @@ user.login(callbacks);
 StackMob.isUserLoggedIn('chucknorris'); //returns true;
 user.isLoggedIn(); //returns true;
 </code></pre>			
+						
 					</section>		
 					<section>
 					<h2>Security &rarr; OAuth 2.0</h2>
@@ -942,14 +977,11 @@ public class HelloWorldExample implements
 					
 				
 				<section>
-					<h2>After Party!</h2>
-					<h3>541 8th st, SF, CA (8th and Bryant)</h3>
-					<ul>
-						<li>Free Food: Tacos</li>
-						<li>Free Drinks &amp; Beer</li>
-						<li>Come meet us and just hang out!</li>
-					</ul>
-					<p><a href="http://html5devconf.com/parties.html" target="_blank">http://html5devconf.com/parties.html</a></p>
+					<h2>Training/Office Hours</h2>
+					<h3>Tuesday June 12, 2012</h3>
+					<h3>541 8th st (8th and Bryant)</h3>
+					<h3>3 blocks away!</h3>
+					
 				</section>
 
 
