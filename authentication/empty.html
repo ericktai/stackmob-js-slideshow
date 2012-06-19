@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>OAuth 2.0 Callback Handler</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+  	window.parent.postMessage({
+  		hasCreds: (window.location.hash ? true : false),
+  		url: window.location.href
+  	}, 'file://');
+  	
+  	alert('hi');
+  	alert('hello' + window.location.href);
+  });
+</script>
+</head>
+<body>
+</body>
+</html>
